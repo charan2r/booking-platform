@@ -13,6 +13,7 @@ export class ServicesService {
     private readonly serviceRepository: Repository<Service>,
   ) {}
 
+  // Create a new service
   async create(createServiceDto: CreateServiceDto): Promise<Service> {
     const service = this.serviceRepository.create({
       ...createServiceDto,
@@ -23,6 +24,7 @@ export class ServicesService {
     return this.serviceRepository.save(service);
   }
 
+  // Get all services
   async findAll(): Promise<Service[]> {
     return this.serviceRepository.find({
       order: {
@@ -31,6 +33,7 @@ export class ServicesService {
     });
   }
 
+  // Get a service by ID
   async findOne(id: string): Promise<Service> {
     const service = await this.serviceRepository.findOne({
       where: { id },
@@ -43,6 +46,7 @@ export class ServicesService {
     return service;
   }
 
+  // Update a service
   async update(
     id: string,
     updateServiceDto: UpdateServiceDto,
@@ -72,6 +76,7 @@ export class ServicesService {
     return this.serviceRepository.save(service);
   }
 
+  // Delete a service
   async remove(id: string): Promise<{ message: string }> {
     const service = await this.findOne(id);
 

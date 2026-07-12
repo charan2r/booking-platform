@@ -15,6 +15,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: ['.env', 'backend/.env'],
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',

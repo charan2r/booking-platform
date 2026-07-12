@@ -1,4 +1,8 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateBookingDto } from './create-booking.dto';
+/* eslint-disable prettier/prettier */
+import { IsEnum } from 'class-validator';
+import { BookingStatus } from '../entities/booking.entity';
 
-export class UpdateBookingDto extends PartialType(CreateBookingDto) {}
+export class UpdateBookingStatusDto {
+  @IsEnum(BookingStatus)
+  status: BookingStatus;
+}

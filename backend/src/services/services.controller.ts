@@ -10,6 +10,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
@@ -17,6 +18,7 @@ import { JwtAuthGuard } from '../auth/auth.guard';
 
 @Controller('services')
 @UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
 
