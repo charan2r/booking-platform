@@ -12,6 +12,7 @@ import { Service } from '../services/entities/service.entity';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingStatusDto } from './dto/update-booking.dto';
 import { BookingStatus } from './entities/booking.entity';
+import { BookingsQueryDto } from './dto/bookings-query.dto';
 
 @Injectable()
 export class BookingsService {
@@ -77,16 +78,54 @@ export class BookingsService {
   }
 
   // Get all bookings
-  async findAll(): Promise<Booking[]> {
-    return this.bookingRepository.find({
-      relations: {
-        service: true,
+  async findAll(query: BookingsQueryDto) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
+
+    const queryBuilder = this.bookingRepository
+      .createQueryBuilder('booking')
+      .leftJoinAndSelect('booking.service', 'service')
+      .orderBy('booking.bookingDate', 'ASC')
+      .addOrderBy('booking.bookingTime', 'ASC')
+      .skip(skip)
+      .take(limit);
+
+    if (query.status) {
+      queryBuilder.andWhere('booking.status = :status', {
+        status: query.status,
+      });
+    }
+
+    if (query.search?.trim()) {
+      const search = `%${query.search.trim()}%`;
+
+      queryBuilder.andWhere(
+        `(
+        booking.customerName ILIKE :search
+        OR booking.customerEmail ILIKE :search
+        OR booking.customerPhone ILIKE :search
+        OR service.title ILIKE :search
+      )`,
+        { search },
+      );
+    }
+
+    const [bookings, total] = await queryBuilder.getManyAndCount();
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data: bookings,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
       },
-      order: {
-        bookingDate: 'ASC',
-        bookingTime: 'ASC',
-      },
-    });
+    };
   }
 
   // Get a booking by ID

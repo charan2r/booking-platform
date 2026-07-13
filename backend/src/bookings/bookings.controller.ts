@@ -7,12 +7,15 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingStatusDto } from './dto/update-booking.dto';
 import { JwtAuthGuard } from '../auth/auth.guard';
+import { BookingsQueryDto } from './dto/bookings-query.dto';
 
 @Controller('bookings')
 export class BookingsController {
@@ -26,18 +29,21 @@ export class BookingsController {
 
   // Protected endpoints
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get()
-  findAll() {
-    return this.bookingsService.findAll();
+  findAll(@Query() query: BookingsQueryDto) {
+    return this.bookingsService.findAll(query);
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.bookingsService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Patch(':id/status')
   updateStatus(
     @Param('id', ParseUUIDPipe) id: string,
@@ -47,6 +53,7 @@ export class BookingsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Patch(':id/cancel')
   cancel(@Param('id', ParseUUIDPipe) id: string) {
     return this.bookingsService.cancel(id);
