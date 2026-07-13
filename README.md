@@ -36,7 +36,7 @@ This project is a RESTful Booking Platform API developed using NestJS and Postgr
 
 ```bash
 git clone <repository-url>
-cd booking-platform
+cd backend
 npm install
 ```
 
