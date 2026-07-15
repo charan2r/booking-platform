@@ -47,7 +47,7 @@ npm install
 Create a `.env` file.
 
 ```env
-DB_URL=postgresql://username:password@hostname/database?sslmode=require
+DB_URL=postgresql://USER:PASSWORD@HOST.neon.tech/DB_NAME?sslmode=require&schema=public
 JWT_SECRET=your_secret_key
 JWT_EXPIRY=1d
 PORT=3000
